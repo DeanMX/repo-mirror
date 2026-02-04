@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################################################################
 #
-# Copyright (C) 2028. Dean Yang
+# Copyright (C) 2029. Dean Yang
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
 # Foundation, version 3.
@@ -40,10 +40,14 @@ function main()
     run "git clone --mirror $REPO"
     ERRNO=$?
 
-    if [[ $REPO =~ http* ]] && [[ $ERRNO -eq 0 ]]; then
+    if [[ $ERRNO -eq 0 ]]; then
         # shellcheck disable=SC2164
         cd "$dir"
-        run "git lfs fetch --all"
+
+        lfs_count=$(git lfs ls-files --all | wc -l)
+        if [ "$lfs_count" -gt 0 ]; then
+            run "git lfs fetch --all"
+        fi
     fi
 }
 
